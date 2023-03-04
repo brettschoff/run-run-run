@@ -1,0 +1,67 @@
+html, * {
+    font-family: helvetica;
+    box-sizing: border-box;
+  }
+  
+  body {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+  }
+  .left-screen {
+    display: grid;
+    grid-template-rows: 1fr 1fr 2fr;
+  }
+  .title-box {
+    text-align: center;
+    background-color: grey;
+    border: 5px solid red;
+  }
+  .event-box {
+    grid-row: 3/4;
+    background-color: green;
+  }
+
+  .right-screen {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr;
+    grid-template-rows: 100px 1fr 100px;
+  }
+  .track {
+    grid-column: 2/3;
+    grid-row: 2/3;
+    background-color: tan;
+  }
+  .start-box {
+    grid-column: 2/3;
+    background-color: green;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .finish-box {
+    grid-column: 2/3;
+    grid-row: 3/4;
+    background-color: red;
+  }
+ #player-pawn {
+    align-self: flex-end;
+    height: 35px;
+    width: 20px;
+    order: 1;
+ }
+ #computer-pawn {
+    align-self: flex-end;
+    height: 35px;
+    width: 45px;
+    order: 3;
+ }
+ .start-box > h3 {
+    align-self: center;
+    order: 2;
+ }
+ .finish-box > h3 {
+    align-self: center;
+    padding-left: 200px;
+    padding-top: 20px;;
+ }
