@@ -91,19 +91,39 @@ html, * {
  }
  #loser-screen {
   text-align: center;
-  Color: red;
+  Color: White;
   background-size: auto;
   grid-column: span 2;
-  background-image: url('https://i.pinimg.com/564x/7f/a9/cf/7fa9cf25a4afb731f571c505ed9ba503.jpg');
+  background-image: url('https://img.freepik.com/fre-vector/game-with-glitch-effect_225004-661.jpg?w=2000&t=st=1678284441~exp=1678285041~hmac=e1c684ea75b4bea8d15f8550be1c40c6aa5f35d0abcb0b113466931090cac4e8');
   background-size: cover;
-  background-repeat: no-repeat;
+  /* background-repeat: no-repeat; */
  }
  #winner-screen {
   text-align: center;
   Color: red;
   background-size: auto;
   grid-column: span 2;
-  background-image: url('https://i.pinimg.com/564x/7f/a9/cf/7fa9cf25a4afb731f571c505ed9ba503.jpg');
+  background-image: url('https://cdn.vectorstock.com/i/1000x1000/38/69/you-have-won-rubber-stamp-vector-12323869.webp');
   background-size: cover;
   background-repeat: no-repeat;
  }
+ .tooltip {
+  position: relative;
+  display: inline-block;
+ }
+
+ .tooltip .tooltiptext {
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 1;
+ }
+

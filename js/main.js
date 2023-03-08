@@ -37,6 +37,12 @@ const eventDesc2El = document.createElement("p");
 const eventDesc3El = document.createElement("p");
 const eventButton2El = document.createElement("button");
 const eventButton1El = document.createElement("button");
+const toolTipPText = document.createElement('span');
+const toolTipCText = document.createElement('span');
+const playerPieceDivEl = document.createElement('div')
+const computerPieceDivEl = document.createElement('div')
+playerPieceDivEl.setAttribute("id", "player-pawn");
+computerPieceDivEl.setAttribute("id", "computer-pawn");
 
 /*----- event listeners -----*/
 buttonP1.addEventListener("click", startGame);
@@ -86,6 +92,7 @@ function init() {
   createRightScreenEl.appendChild(createFinishBoxEl);
   createStartBoxEl.appendChild(createStartTextEl);
   createFinishBoxEl.appendChild(createFinishTextEl);
+
 }
 
 function startGame() {
@@ -98,28 +105,34 @@ function startGame() {
 }
 
 function playersTurn() {
+  toolTipPlayer();
   rollTheDice();
   randomEvent(player);
   playerOnTrack();
+  render(player);
   playerPositionCheck(player);
   checkWinCondition();
 }
 
 function computersTurn() {
+  toolTipComputer()
   computerDiceRoll();
   randomEvent(computer);
   computerOnTrack();
-  ComputerPositionCheck(computer);
+  render(computer);
+  computerPositionCheck(computer);
   checkWinCondition();
 }
 
 function generatePieces() {
   playerPieceEl.src =
     "./pngs/toppng.com-free-png-pawn-white-chess-piece-png-images-transparent-chess-piece-pawn-4324x7923.png";
-  trackStart.appendChild(playerPieceEl);
+  playerPieceDivEl.appendChild(playerPieceEl);
   computerPieceEl.src =
     "./pngs/kisspng-chess-piece-pawn-king-queen-painted-black-chess-pieces-5a80da4f05e6c5.7691427615183939350242.png";
-  trackStart.appendChild(computerPieceEl);
+  computerPieceDivEl.appendChild(computerPieceEl);
+  trackStart.appendChild(playerPieceDivEl)
+  trackStart.appendChild(computerPieceDivEl)
 }
 
 function removeTitleBox() {
@@ -150,7 +163,7 @@ function rollTheDice() {
   const diceResult = document.createElement("p");
   diceResult.textContent = `You advance ${diceTotal}`;
   titleBoxEl.appendChild(diceResult);
-  player.tile = player.tile + diceTotal + player.tile;
+  player.tile = player.tile + diceTotal + player.speed;
 }
 
 function computerDiceRoll() {
@@ -191,10 +204,10 @@ function randomEvent(user) {
   const randomNumber = Math.floor(Math.random() * 8);
   switch (randomNumber) {
     case 1:
-      catapult();
+      catapult(user);
       break;
     case 2:
-      bearChase();
+      bearChase(user);
       break;
     case 3:
       energyDrink(user);
@@ -209,10 +222,10 @@ function randomEvent(user) {
       grappleHook(user);
       break;
     case 7:
-      tardisMovement();
+      tardisMovement(user);
       break;
     default:
-      noEvent();
+      noEvent(user);
   }
 }
 
@@ -245,6 +258,7 @@ function energyDrink(user) {
   user.speed = user.speed + 2;
   eventBoxEl.appendChild(eventTitleEl);
   eventBoxEl.appendChild(eventDesc1El);
+  render(user);
   nextTurn();
 }
 
@@ -255,10 +269,11 @@ function weightedShoes(user) {
   user.speed = user.speed - 2;
   eventBoxEl.appendChild(eventTitleEl);
   eventBoxEl.appendChild(eventDesc1El);
+  render(user);
   nextTurn();
 }
 
-function catapult() {
+function catapult(user) {
   const randomNumber = Math.floor(Math.random() * 14) + 1;
   if (turnCounter === 0) {
     player.tile = player.tile + randomNumber;
@@ -269,9 +284,10 @@ function catapult() {
   eventDesc1El.textContent = `As you step on this tile you are launched ${randomNumber} tiles forward!`;
   eventBoxEl.appendChild(eventTitleEl);
   eventBoxEl.appendChild(eventDesc1El);
+  render(user);
   nextTurn();
 }
-function bearChase() {
+function bearChase(user) {
   const randomNumber = Math.floor(Math.random() * 19) + 1;
   if (turnCounter === 0) {
     player.tile = player.tile - randomNumber;
@@ -287,14 +303,16 @@ function bearChase() {
   eventBoxEl.appendChild(eventTitleEl);
   eventBoxEl.appendChild(eventDesc1El);
   eventBoxEl.appendChild(eventDesc2El);
+  render(user);
   nextTurn();
 }
 
-function noEvent() {
+function noEvent(user) {
   eventTitleEl.textContent = "Get a little rest";
   eventDesc1El.textContent = "Nothing eventful happens to you this turn.";
   eventBoxEl.appendChild(eventTitleEl);
   eventBoxEl.appendChild(eventDesc1El);
+  render(user)
   nextTurn();
 }
 
@@ -305,6 +323,7 @@ function dashForPond(user) {
     eventBoxEl.appendChild(eventDesc3El);
     minPlayerTile();
     minComputerTile();
+    render(user)
     nextTurn();
   } else {
     const randomNumber = Math.floor(Math.random() * 20);
@@ -315,6 +334,7 @@ function dashForPond(user) {
     eventBoxEl.appendChild(eventDesc3El);
     minPlayerTile();
     minComputerTile();
+    render(user)
     nextTurn();
   }
 }
@@ -334,6 +354,7 @@ function runAway(user) {
     minPlayerTile();
     minComputerTile();
   }
+  render(user);
   nextTurn();
 }
 
@@ -371,12 +392,10 @@ function grappleOpponent(user) {
   const randomNumber = Math.floor(Math.random() * 4);
   if (randomNumber && !turnCounter) {
     const randomNumber2 = Math.floor(Math.random() * 3) + 1;
-    const missedShot = Math.floor(
-      (player.tile - computer.tile) / randomNumber2
-    );
+    const missedShot = Math.floor((player.tile - computer.tile) / randomNumber2);
     eventDesc3El.textContent = `As the hook travels you notice it is not going as far as you would like. It lands short of the mark but still pulls you
       ${missedShot} tiles`;
-    user.tile = computer.tile;
+    user.tile = user.tile + missedShot;
   } else if (randomNumber && turnCounter) {
     const randomNumber2 = Math.floor(Math.random() * 9) + 1;
     const missedShot = Math.floor(
@@ -397,6 +416,7 @@ function grappleOpponent(user) {
   eventBoxEl.appendChild(eventDesc3El);
   eventButton1El.removeEventListener("click", grappleOpponent);
   eventButton2El.removeEventListener("click", nextTurn);
+  render(user);
   nextTurn();
 }
 
@@ -461,16 +481,18 @@ function grappleFarther(user) {
   eventBoxEl.appendChild(eventDesc3El);
   eventButton1El.removeEventListener("click", checkInput);
   eventButton2El.removeEventListener("click", errorMessage);
+  render(user)
   nextTurn();
 }
 
-function tardisMovement() {
+function tardisMovement(user) {
   eventTitleEl.textContent = "Doctor Who?";
   eventDesc2El.textContent = `Out of no where a blue telephone box and a woman steps out. "Um excuse me. Where and When are we?" she asks.
     "Oh never mind sorry for bothering you" she quickly closes the door and a loud whir of noise comes from the box before it vanishs. You
     you realize you have been standing still for a minute and don't gain any ground.`;
   eventBoxEl.appendChild(eventTitleEl);
   eventBoxEl.appendChild(eventDesc2El);
+  render(user);
   nextTurn();
 }
 
@@ -520,38 +542,38 @@ function computerWin() {
 
 function playerPositionCheck(user) {
   if (user.tile <= 50) {
-    playerPieceEl.style.gridRow = "1/2";
+    playerPieceDivEl.style.gridRow = "1/2";
   } else if (user.tile <= 100) {
-    playerPieceEl.style.gridRow = "2/3";
+    playerPieceDivEl.style.gridRow = "2/3";
   } else if (user.tile <= 150) {
-    playerPieceEl.style.gridRow = "3/4";
+    playerPieceDivEl.style.gridRow = "3/4";
   } else if (user.tile <= 200) {
-    playerPieceEl.style.gridRow = "4/5";
+    playerPieceDivEl.style.gridRow = "4/5";
   } else if (user.tile <= 250) {
-    playerPieceEl.style.gridRow = "5/6";
+    playerPieceDivEl.style.gridRow = "5/6";
   } else {
-    playerPieceEl.style.gridRow = "6/7";
+    playerPieceDivEl.style.gridRow = "6/7";
   }
 }
-function ComputerPositionCheck(user) {
+function computerPositionCheck(user) {
   if (user.tile <= 50) {
-    computerPieceEl.style.gridRow = "1/2";
+    computerPieceDivEl.style.gridRow = "1/2";
   } else if (user.tile <= 100) {
-    computerPieceEl.style.gridRow = "2/3";
+    computerPieceDivEl.style.gridRow = "2/3";
   } else if (user.tile <= 150) {
-    computerPieceEl.style.gridRow = "3/4";
+    computerPieceDivEl.style.gridRow = "3/4";
   } else if (user.tile <= 200) {
-    computerPieceEl.style.gridRow = "4/5";
+    computerPieceDivEl.style.gridRow = "4/5";
   } else if (user.tile <= 250) {
-    computerPieceEl.style.gridRow = "5/6";
+    computerPieceDivEl.style.gridRow = "5/6";
   } else {
-    computerPieceEl.style.gridRow = "6/7";
+    computerPieceDivEl.style.gridRow = "6/7";
   }
 }
 
 function playerOnTrack() {
-  if (playerPieceEl.parentElement === trackStart) {
-    trackBoxEl.appendChild(playerPieceEl);
+  if (playerPieceDivEl.parentElement === trackStart) {
+    trackBoxEl.appendChild(playerPieceDivEl);
     playerPieceEl.style.gridColumn = "1/2";
     playerPieceEl.style.gridRow = "1/2";
   } else {
@@ -559,8 +581,8 @@ function playerOnTrack() {
   }
 }
 function computerOnTrack() {
-  if (computerPieceEl.parentElement === trackStart) {
-    trackBoxEl.appendChild(computerPieceEl);
+  if (computerPieceDivEl.parentElement === trackStart) {
+    trackBoxEl.appendChild(computerPieceDivEl);
     computerPieceEl.style.gridColumn = "2/3";
     computerPieceEl.style.gridRow = "2/3";
   } else {
@@ -578,3 +600,36 @@ function nextTurn() {
     endTurnButtonEL.textContent = "Your turn";
   }
 }
+
+function toolTipPlayer() {
+    toolTipPText.classList.add('tooltiptext')
+    playerPieceEl.classList.add('tooltip')
+    playerPieceDivEl.addEventListener('mouseenter', function() {
+      playerPieceDivEl.appendChild(toolTipPText)
+    })
+    playerPieceDivEl.addEventListener('mouseout', function(){
+      playerPieceDivEl.removeChild(toolTipPText);
+    })
+  }
+  function toolTipComputer() {
+    toolTipCText.classList.add('tooltiptext')
+    computerPieceEl.classList.add('tooltip')
+    computerPieceDivEl.addEventListener('mouseenter', function() {
+      computerPieceDivEl.appendChild(toolTipCText)
+    })
+    computerPieceDivEl.addEventListener('mouseout', function(){
+      computerPieceDivEl.removeChild(toolTipCText);
+    })
+  }
+
+  function updateToolTip(){
+    if(!turnCounter) {
+      toolTipPText.textContent = `Tile: ${player.tile} Speed: ${player.speed}`
+    }else {
+      toolTipCText.textContent = `Tile: ${computer.tile} Speed: ${computer.speed}`
+    }
+  }
+
+  function render(user) {
+    updateToolTip()
+  }
