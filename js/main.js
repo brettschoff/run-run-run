@@ -317,6 +317,7 @@ function noEvent(user) {
 }
 
 function dashForPond(user) {
+  eventButton1El.removeEventListener('click', dashForPond)
   if (Math.random < 0.5) {
     eventDesc3El.textContent =
       "You make a break for the pond and dive right in. The bees leave you alone.";
@@ -326,7 +327,7 @@ function dashForPond(user) {
     render(user)
     nextTurn();
   } else {
-    const randomNumber = Math.floor(Math.random() * 20);
+    const randomNumber = Math.floor(Math.random() * 5);
     eventDesc3El.textContent = `You make a break for the pond and find it is too far away. The bess chase you back a few spaces before stinging you.
        It hurts to walk now. Lose 1 speed and ${randomNumber} tiles`;
     user.tile = user.tile - randomNumber;
@@ -340,8 +341,9 @@ function dashForPond(user) {
 }
 
 function runAway(user) {
-  const randomNumber = Math.floor(Math.random() * 10);
-  if (Math.Random < 9) {
+  eventButton2El.removeEventListener('click',runAway)
+  const randomNumber = Math.floor(Math.random() * 9) + 1;
+  if (Math.Random <= 9) {
     eventDesc2El.textContent = `You high tail backwards as far away as you can. Lose ${randomNumber} tiles`;
     user.tile = user.tile - randomNumber;
     eventBoxEl.appendChild(eventDesc2El);
@@ -392,7 +394,7 @@ function grappleOpponent(user) {
   const randomNumber = Math.floor(Math.random() * 4);
   if (randomNumber && !turnCounter) {
     const randomNumber2 = Math.floor(Math.random() * 3) + 1;
-    const missedShot = Math.floor((player.tile - computer.tile) / randomNumber2);
+    const missedShot = Math.floor((computer.tile - player.tile) / randomNumber2);
     eventDesc3El.textContent = `As the hook travels you notice it is not going as far as you would like. It lands short of the mark but still pulls you
       ${missedShot} tiles`;
     user.tile = user.tile + missedShot;
@@ -403,15 +405,15 @@ function grappleOpponent(user) {
     );
     eventDesc3El.textContent = `As the hook travels you notice it is not going to come close to hitting you. It lands short of the mark but still pulls
        your opponent ${missedShot} tiles`;
-    user.tile = player.tile;
+    user.tile = user.tile + missedShot;
   } else if (!randomNumber && !turnCounter) {
     eventDesc3El.textContent = `The hook soars through the sky it starts to look like it will not make it but it is just a trick of your eyes. It swings
       around your opponent and you feel a tug as you speed up to him`;
-    user.tile = computer.tile;
+    player.tile = computer.tile;
   } else {
     eventDesc3El.textContent = `The hook soars through the sky it starts to look like it will not hit you but unfortunatly you feel a cable wrap around
       your waist. A tug pulls at you a bit as you see your opponent flying towards you.`;
-    user.tile = player.tile;
+    computer.tile = player.tile;
   }
   eventBoxEl.appendChild(eventDesc3El);
   eventButton1El.removeEventListener("click", grappleOpponent);
@@ -603,31 +605,31 @@ function nextTurn() {
 
 function toolTipPlayer() {
     toolTipPText.classList.add('tooltiptext')
-    playerPieceEl.classList.add('tooltip')
-    playerPieceDivEl.addEventListener('mouseenter', function() {
-      playerPieceDivEl.appendChild(toolTipPText)
+    playerPieceDivEl.classList.add('tooltip')
+    playerPieceDivEl.appendChild(toolTipPText)
+    playerPieceDivEl.addEventListener('mouseover', function() {
+      toolTipPText.style.visibility = 'visible'
     })
-    playerPieceDivEl.addEventListener('mouseout', function(){
-      playerPieceDivEl.removeChild(toolTipPText);
+    playerPieceDivEl.addEventListener('mouseleave', function(){
+      toolTipPText.style.visibility = 'hidden';
     })
   }
   function toolTipComputer() {
     toolTipCText.classList.add('tooltiptext')
-    computerPieceEl.classList.add('tooltip')
-    computerPieceDivEl.addEventListener('mouseenter', function() {
-      computerPieceDivEl.appendChild(toolTipCText)
+    computerPieceDivEl.classList.add('tooltip')
+    computerPieceDivEl.appendChild(toolTipCText)
+    computerPieceDivEl.addEventListener('mouseover', function() {
+      toolTipCText.style.visibility = 'visible'
     })
-    computerPieceDivEl.addEventListener('mouseout', function(){
-      computerPieceDivEl.removeChild(toolTipCText);
+    computerPieceDivEl.addEventListener('mouseleave', function(){
+      toolTipCText.style.visibility = 'hidden'
     })
   }
 
   function updateToolTip(){
-    if(!turnCounter) {
       toolTipPText.textContent = `Tile: ${player.tile} Speed: ${player.speed}`
-    }else {
       toolTipCText.textContent = `Tile: ${computer.tile} Speed: ${computer.speed}`
-    }
+    
   }
 
   function render(user) {
