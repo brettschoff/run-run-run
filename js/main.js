@@ -201,7 +201,7 @@ function switchTurn() {
 }
 
 function randomEvent(user) {
-  const randomNumber = Math.floor(Math.random() * 8);
+  const randomNumber = Math.floor(Math.random() * 9);
   switch (randomNumber) {
     case 1:
       catapult(user);
@@ -223,6 +223,9 @@ function randomEvent(user) {
       break;
     case 7:
       tardisMovement(user);
+      break;
+      case 8:
+      beaconsAreLit(user);
       break;
     default:
       noEvent(user);
@@ -496,6 +499,52 @@ function tardisMovement(user) {
   eventBoxEl.appendChild(eventDesc2El);
   render(user);
   nextTurn();
+}
+
+function beaconsAreLit (user) {
+  eventTitleEl.textContent = 'Gondor calls for aid!'
+  eventDesc1El.textContent = `Off in the distance you see a bonfire alight. You hear voices yell out
+  'The beacons are lit! Gondor calls for aid!' A troop of horse come trotting out from the woods beside you.
+  'Will Rohan answer the call?' The leader looks to you`
+  eventButton1El.textContent = 'Rohan will answer!'
+  eventButton2El.textContent = 'No! You people are crazy.'
+  eventBoxEl.appendChild(eventTitleEl)
+  eventBoxEl.appendChild(eventDesc1El)
+  eventBoxEl.appendChild(eventButton1El)
+  eventBoxEl.appendChild(eventButton2El)
+  eventButton1El.addEventListener('click', rohanHasAnswered)
+  eventButton2El.addEventListener('click', rohanWillNotAnswer)
+}
+
+function rohanHasAnswered(user) {
+  removeEventBox()
+  eventButton1El.removeEventListener('click', rohanHasAnswered)
+  eventTitleEl.textContent = 'Rohan will answer!'
+  eventDesc1El.textContent = `"Huzzah!" all the soldiers shout. As you mount onto the warhorse next to you and you ride off into battle with them.`
+   const randomNumber = Math.random()
+   if(randomNumber <= 0.9) {
+    eventDesc2El.textContent = `You go on a long and mighty quest to save Gondor and defend the city against the evil forces. After the battle a 
+    wizard in all white walks up to you and says 'I am sorry for dragging you from your race. Since you helped us let me help you.' He calls upon
+    his mighty eagle friends to make up some lost ground. Gain 50 tiles.`
+    user.tile = user.tile + 50;
+   }else{
+    eventDesc2El.textContent = `Even with the help from Rohan the city is destoryed by the forces of evil. You barely escape before you to are caught
+    and killed. You gain no tiles.`
+   }
+   eventBoxEl.appendChild(eventTitleEl)
+   eventBoxEl.appendChild(eventDesc1El)
+   eventBoxEl.appendChild(eventDesc2El)
+   render(user)
+   nextTurn()
+}
+
+function rohanWillNotAnswer(user) {
+  eventButton2El.removeEventListener('click', rohanWillNotAnswer)
+  eventDesc2El.textContent = `The soldiers look disappointed but return back into the woods where they came from. You notice they left you a horse. Gain 5 speed`
+  user.speed = user.speed + 5;
+  eventBoxEl.appendChild(eventDesc2El)
+  render(user)
+  nextTurn()
 }
 
 function checkWinCondition() {

@@ -2,7 +2,7 @@
 
 ## Description
 
-Welcome to Run?, Run, Run! where you can race against the computer in a random event race. Through a lot of Javascript and some CSS and HTML I was able to make a racing game where you are being thrown obstacles at you that will either hinder you or help you. Right now there are currently only 7 random events that you may encounter but I plan on adding some more exciting events. I also plan on adding in more modifiers to affect the gameplay.
+Welcome to Run?, Run, Run! where you can race against the computer in a random event race. Through a lot of Javascript and some CSS and HTML I was able to make a racing game where you are having obstacles thrown at you that will either hinder you or help you. Right now there are currently only 8 random events that you may encounter.
 
 ## How to Play!
 
@@ -25,6 +25,15 @@ Once you finish your event you will get the <button>End your turn</button> This 
 ## Current Modifiers:
 ### Speed
 Speed grants extra movement based on its modifier. It can also slow you down if it drops down into the negatives.
+
+## Icebox Items
+This is a list of my planned future inprovements.
+<ol>
+<li>More random Events</li>
+<li>Different Modifiers</li>
+<li>Local multiplayer</li>
+<li>Gameplay Sound</li>
+</ol>
 
 ## Credit
 
