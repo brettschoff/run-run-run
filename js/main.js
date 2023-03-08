@@ -92,7 +92,6 @@ function init() {
   createRightScreenEl.appendChild(createFinishBoxEl);
   createStartBoxEl.appendChild(createStartTextEl);
   createFinishBoxEl.appendChild(createFinishTextEl);
-
 }
 
 function startGame() {
@@ -562,16 +561,18 @@ function playerWin() {
   const winnerScreenEl = document.createElement("div");
   const winnerTitleEl = document.createElement("h1");
   const winnerTextEl = document.createElement("p");
+  const playAgainButtonEl = document.createElement('button');
+  playAgainButtonEl.textContent = 'Play Again?';
+  playAgainButtonEl.addEventListener('click', playAgain)
   winnerScreenEl.id = "winner-screen";
   winnerTitleEl.textContent = "We have a winner!!!!!!!";
   winnerTextEl.textContent = `Congratulations! you (the Player) have won! you were actually able to out run the run 
     computer and deserve something special let me see if I can find that cake I was going to give to another test subject a while ago....`;
-  while (bodyEl.firstChild) {
-    bodyEl.removeChild(bodyEl.firstChild);
-  }
+  removeBodyEL();
   winnerScreenEl.appendChild(winnerTitleEl);
   winnerScreenEl.appendChild(winnerTextEl);
   bodyEl.appendChild(winnerScreenEl);
+  winnerScreenEl.appendChild(playAgainButtonEl)
 }
 
 function computerWin() {
@@ -579,16 +580,18 @@ function computerWin() {
   const loserScreenEl = document.createElement("div");
   const loserTitleEl = document.createElement("h1");
   const loserTextEL = document.createElement("p");
+  const playAgainButtonEl = document.createElement('button');
+  playAgainButtonEl.textContent = 'Play Again?';
+  playAgainButtonEl.addEventListener('click', playAgain)
   loserScreenEl.id = "loser-screen";
   loserTitleEl.textContent = "We have a winner!!!!!!!";
   loserTextEL.textContent = `Unfortunately it is not you. You were not able to out run the run computer and therefor have lost this game. 
     If you think this is a fluke feel free to try to play again.`;
-  while (bodyEl.firstChild) {
-    bodyEl.removeChild(bodyEl.firstChild);
-  }
+  removeBodyEL();
   loserScreenEl.appendChild(loserTitleEl);
   loserScreenEl.appendChild(loserTextEL);
   bodyEl.appendChild(loserScreenEl);
+  loserScreenEl.appendChild(playAgainButtonEl)
 }
 
 function playerPositionCheck(user) {
@@ -683,4 +686,14 @@ function toolTipPlayer() {
 
   function render(user) {
     updateToolTip()
+  }
+
+  function playAgain() {
+    window.location.reload()
+  }
+
+  function removeBodyEL() {
+    while (bodyEl.firstChild) {
+      bodyEl.removeChild(bodyEl.firstChild);
+    }
   }
