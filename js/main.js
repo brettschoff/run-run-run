@@ -776,3 +776,4 @@ function toolTipPlayer() {
     endTurnButtonEL.textContent = 'End your turn'
     titleBoxEl.appendChild(endTurnButtonEL)
   }
+  
