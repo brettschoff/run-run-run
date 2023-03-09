@@ -110,8 +110,7 @@ function playersTurn() {
   rollTheDice();
   randomEvent(player);
   playerOnTrack();
-  render(player);
-  playerPositionCheck(player);
+  render();
   checkWinCondition();
 }
 
@@ -120,8 +119,7 @@ function computersTurn() {
   computerDiceRoll();
   randomEvent(computer);
   computerOnTrack();
-  render(computer);
-  computerPositionCheck(computer);
+  render();
   checkWinCondition();
 }
 
@@ -271,7 +269,7 @@ function energyDrink(user) {
   user.speed = user.speed + 2;
   eventBoxEl.appendChild(eventTitleEl);
   eventBoxEl.appendChild(eventDesc1El);
-  render(user);
+  render();
   nextTurn();
 }
 
@@ -282,7 +280,7 @@ function weightedShoes(user) {
   user.speed = user.speed - 2;
   eventBoxEl.appendChild(eventTitleEl);
   eventBoxEl.appendChild(eventDesc1El);
-  render(user);
+  render();
   nextTurn();
 }
 
@@ -297,7 +295,7 @@ function catapult(user) {
   eventDesc1El.textContent = `As you step on this tile you are launched ${randomNumber} tiles forward!`;
   eventBoxEl.appendChild(eventTitleEl);
   eventBoxEl.appendChild(eventDesc1El);
-  render(user);
+  render();
   nextTurn();
 }
 function bearChase(user) {
@@ -316,7 +314,7 @@ function bearChase(user) {
   eventBoxEl.appendChild(eventTitleEl);
   eventBoxEl.appendChild(eventDesc1El);
   eventBoxEl.appendChild(eventDesc2El);
-  render(user);
+  render();
   nextTurn();
 }
 
@@ -338,7 +336,7 @@ function dashForPond(user) {
     eventBoxEl.appendChild(eventDesc3El);
     minPlayerTile();
     minComputerTile();
-    render(user)
+    render()
     nextTurn();
   } else {
     const randomNumber = Math.floor(Math.random() * 5);
@@ -371,7 +369,7 @@ function runAway(user) {
     minPlayerTile();
     minComputerTile();
   }
-  render(user);
+  render();
   nextTurn();
 }
 
@@ -440,7 +438,7 @@ function grappleOpponent(user) {
   eventBoxEl.appendChild(eventDesc3El);
   eventButton1El.removeEventListener("click", grappleOpponent);
   eventButton2El.removeEventListener("click", nextTurn);
-  render(user);
+  render();
   nextTurn();
 }
 
@@ -506,7 +504,7 @@ function grappleFarther(user) {
   eventBoxEl.appendChild(eventDesc3El);
   eventButton1El.removeEventListener("click", checkInput);
   eventButton2El.removeEventListener("click", errorMessage);
-  render(user)
+  render()
   nextTurn();
 }
 
@@ -517,7 +515,7 @@ function tardisMovement(user) {
     you realize you have been standing still for a minute and don't gain any ground.`;
   eventBoxEl.appendChild(eventTitleEl);
   eventBoxEl.appendChild(eventDesc2El);
-  render(user);
+  render();
   nextTurn();
 }
 
@@ -580,7 +578,7 @@ function rohanHasAnswered(user) {
    eventBoxEl.appendChild(eventTitleEl)
    eventBoxEl.appendChild(eventDesc1El)
    eventBoxEl.appendChild(eventDesc2El)
-   render(user)
+   render()
    nextTurn()
 }
 
@@ -589,7 +587,7 @@ function rohanWillNotAnswer(user) {
   eventDesc2El.textContent = `The soldiers look disappointed but return back into the woods where they came from. You notice they left you a horse. Gain 5 speed`
   user.speed = user.speed + 5;
   eventBoxEl.appendChild(eventDesc2El)
-  render(user)
+  render()
   nextTurn()
 }
 
@@ -740,8 +738,10 @@ function toolTipPlayer() {
     
   }
 
-  function render(user) {
+  function render() {
     updateToolTip()
+    playerPositionCheck(player)
+    computerPositionCheck(computer)
   }
 
   function playAgain() {

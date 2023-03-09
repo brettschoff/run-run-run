@@ -2,7 +2,11 @@
 
 ## Description
 
-Welcome to Run?, Run, Run! where you can race against the computer in a random event race. Through a lot of Javascript and some CSS and HTML I was able to make a racing game where you are having obstacles thrown at you that will either hinder you or help you. Right now there are currently only 8 random events that you may encounter.
+Welcome to Run?, Run, Run! where you can race against the computer in a random event race. Through a lot of Javascript and some CSS and HTML I was able to make a racing game where you are having obstacles thrown at you that will either hinder you or help you. Right now there are currently only 9 random events that you may encounter.
+
+## Want to play?
+
+<a href='https://brettschoff.github.io/run-run-run/'>Click Here</a>
 
 ## How to Play!
 
