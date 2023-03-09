@@ -43,6 +43,6 @@ This game is a brain child of mine but I did have some input and code support fr
 Check out Dan's work!
 </a>
 and
-<a href="">
+<a href="https://github.com/samuel-w-berg/connect-4">
 Check out Sam's work!
 </a>

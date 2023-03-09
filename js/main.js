@@ -1,4 +1,3 @@
-console.log('JS TEST MAIN BRANCH');
 init();
 /*----- constants -----*/
 const player = {
@@ -332,6 +331,7 @@ function noEvent(user) {
 
 function dashForPond(user) {
   eventButton1El.removeEventListener('click', dashForPond)
+  eventButton2El.removeEventListener('click',runAway)
   if (Math.random < 0.5) {
     eventDesc3El.textContent =
       "You make a break for the pond and dive right in. The bees leave you alone.";
@@ -355,6 +355,7 @@ function dashForPond(user) {
 }
 
 function runAway(user) {
+  eventButton1El.removeEventListener('click', dashForPond)
   eventButton2El.removeEventListener('click',runAway)
   const randomNumber = Math.floor(Math.random() * 9) + 1;
   if (Math.Random <= 9) {
@@ -383,14 +384,14 @@ function grappleHook(user) {
   if (!turnCounter && player.tile < computer.tile) {
     eventButton1El.textContent = "Grab you opponent?";
     eventButton2El.textContent = "Take no action";
-    eventButton1El.addEventListener("click", (user) => {grappleOpponent(user)});
+    eventButton1El.addEventListener("click", playerIsGrapplingOpponent);
     eventButton2El.addEventListener("click", nextTurn);
     eventBoxEl.appendChild(eventButton1El);
     eventBoxEl.appendChild(eventButton2El);
   } else if (!turnCounter && player.tile > computer.tile) {
     eventButton1El.textContent = "Expand my lead!";
     eventButton2El.textContent = "Take no action";
-    eventButton1El.addEventListener("click", (user) => {grappleFartherInput(user)});
+    eventButton1El.addEventListener("click", grappleFartherInput);
     eventButton2El.addEventListener("click", nextTurn);
     eventBoxEl.appendChild(eventButton1El);
     eventBoxEl.appendChild(eventButton2El);
@@ -399,6 +400,13 @@ function grappleHook(user) {
     grappleFarther(user);
   } else {
     grappleOpponent(user);
+  }
+}
+
+function playerIsGrapplingOpponent() {
+  eventButton1El.removeEventListener('click', playerIsGrapplingOpponent)
+  if(!turnCounter) {
+    grappleOpponent(player)
   }
 }
 
@@ -436,7 +444,7 @@ function grappleOpponent(user) {
   nextTurn();
 }
 
-function grappleFartherInput(user) {
+function grappleFartherInput() {
   eventButton1El.removeEventListener("click", grappleFartherInput);
   eventDesc2El.textContent = "How far would you like to travel? (1-20)";
   const inputBox = document.createElement("input");
@@ -445,14 +453,15 @@ function grappleFartherInput(user) {
   eventBoxEl.appendChild(eventDesc2El);
   eventBoxEl.appendChild(inputBox);
   eventBoxEl.appendChild(eventButton1El);
-  eventButton1El.addEventListener("click", (user) => {checkInput(user)});
+  eventButton1El.addEventListener('click', checkInput);
 }
 
-function checkInput(user) {
+function checkInput() {
+  eventButton1El.removeEventListener('click', checkInput)
   const inputBox = document.querySelector("input");
   if (inputBox.valueAsNumber <= 20 && inputBox.valueAsNumber > 0) {
     inputValues = inputBox.valueAsNumber;
-    grappleFarther(user);
+    grappleFarther(player);
   } else {
     errorMessage();
   }
@@ -521,10 +530,36 @@ function beaconsAreLit (user) {
   eventButton2El.textContent = 'No! You people are crazy.'
   eventBoxEl.appendChild(eventTitleEl)
   eventBoxEl.appendChild(eventDesc1El)
-  eventBoxEl.appendChild(eventButton1El)
-  eventBoxEl.appendChild(eventButton2El)
-  eventButton1El.addEventListener('click', (user) => {rohanHasAnswered(user)})
-  eventButton2El.addEventListener('click', (user) => {rohanWillNotAnswer(user)});
+  if(!turnCounter) {
+    eventBoxEl.appendChild(eventButton1El)
+    eventBoxEl.appendChild(eventButton2El)
+    eventButton1El.addEventListener('click', rohanHasAnsweredCheck)
+    eventButton2El.addEventListener('click', rohanWillNotAnswerCheck);
+  }else {
+    if(Math.random() <= 0.5) {
+      rohanHasAnswered(computer)
+    }else {
+      rohanWillNotAnswer(computer)
+    }
+  }
+}
+function rohanWillNotAnswerCheck() {
+  eventButton1El.removeEventListener('click', rohanWillNotAnswerCheck)
+  eventButton2El.removeEventListener('click', rohanHasAnsweredCheck)
+  if(!turnCounter) {
+    rohanWillNotAnswer(player)
+  }else {
+    rohanWillNotAnswer(computer)
+  }
+}
+function rohanHasAnsweredCheck(){
+  eventButton1El.removeEventListener('click', rohanWillNotAnswerCheck)
+  eventButton2El.removeEventListener('click', rohanHasAnsweredCheck)
+  if(!turnCounter) {
+    rohanHasAnswered(player)
+  }else{
+    rohanHasAnswered(computer)
+  }
 }
 
 function rohanHasAnswered(user) {
@@ -722,19 +757,22 @@ function toolTipPlayer() {
   function skipComputerTurn() {
     removeTitleBox()
     removeEventBox()
-    const playerUIEl = document.createElement("h2");
-    playerTextEl.textContent = "The computer has lost its turn!";
-    titleBoxEl.appendChild(playerUIEl);
+    console.log('skipped computer')
+    const titleBoxTitleEl= document.createElement("h2");
+    titleBoxTitleEl.textContent = "The computer has lost its turn!";
+    titleBoxEl.appendChild(titleBoxTitleEl);
     turnCounter = 1;
-    nextTurn()    
+    titleBoxEl.appendChild(endTurnButtonEL)
   }
 
   function skipPlayerTurn() {
     removeTitleBox()
     removeEventBox()
-    const playerUIEl = document.createElement("h2");
-    playerTextEl.textContent = "You have lost your turn!";
-    titleBoxEl.appendChild(playerUIEl);
+    console.log('skipped player')
+    const titleBoxTitleEl = document.createElement("h2");
+    titleBoxTitleEl.textContent = "You have lost your turn!";
+    titleBoxEl.appendChild(titleBoxTitleEl);
     turnCounter = 0;
-    nextTurn()
+    endTurnButtonEL.textContent = 'End your turn'
+    titleBoxEl.appendChild(endTurnButtonEL)
   }
