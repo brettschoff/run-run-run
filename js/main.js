@@ -3,10 +3,12 @@ init();
 const player = {
   tile: 0,
   speed: 0,
+  skipTurn: 0,
 };
 const computer = {
   tile: 0,
   speed: 0,
+  skipTurn: 0,
 };
 
 /*----- state variables -----*/
@@ -186,12 +188,18 @@ function minComputerTile() {
 }
 
 function switchTurn() {
-  if (turnCounter === 0) {
+  if (!turnCounter && !computer.skipTurn) {
     turnCounter = 1;
     removeTitleBox();
     removeEventBox();
     computersTurn();
-  } else {
+  }else if(!turnCounter && computer.skipTurn){
+    computer.skipTurn --
+    skipComputerTurn()
+  }else if(turnCounter && player.skipTurn) {
+    player.skipTurn --
+    skipPlayerTurn()
+  }else {
     turnCounter = 0;
     removeTitleBox();
     removeEventBox();
@@ -200,7 +208,7 @@ function switchTurn() {
 }
 
 function randomEvent(user) {
-  const randomNumber = Math.floor(Math.random() * 9);
+  const randomNumber = Math.floor(Math.random() * 10);
   switch (randomNumber) {
     case 1:
       catapult(user);
@@ -223,8 +231,11 @@ function randomEvent(user) {
     case 7:
       tardisMovement(user);
       break;
-      case 8:
+    case 8:
       beaconsAreLit(user);
+      break;
+    case 9:
+      pitTrap(user);
       break;
     default:
       noEvent(user);
@@ -371,14 +382,14 @@ function grappleHook(user) {
   if (!turnCounter && player.tile < computer.tile) {
     eventButton1El.textContent = "Grab you opponent?";
     eventButton2El.textContent = "Take no action";
-    eventButton1El.addEventListener("click", grappleOpponent);
+    eventButton1El.addEventListener("click", (user) => {grappleOpponent(user)});
     eventButton2El.addEventListener("click", nextTurn);
     eventBoxEl.appendChild(eventButton1El);
     eventBoxEl.appendChild(eventButton2El);
   } else if (!turnCounter && player.tile > computer.tile) {
     eventButton1El.textContent = "Expand my lead!";
     eventButton2El.textContent = "Take no action";
-    eventButton1El.addEventListener("click", grappleFartherInput);
+    eventButton1El.addEventListener("click", (user) => {grappleFartherInput(user)});
     eventButton2El.addEventListener("click", nextTurn);
     eventBoxEl.appendChild(eventButton1El);
     eventBoxEl.appendChild(eventButton2El);
@@ -433,7 +444,7 @@ function grappleFartherInput(user) {
   eventBoxEl.appendChild(eventDesc2El);
   eventBoxEl.appendChild(inputBox);
   eventBoxEl.appendChild(eventButton1El);
-  eventButton1El.addEventListener("click", checkInput);
+  eventButton1El.addEventListener("click", (user) => {checkInput(user)});
 }
 
 function checkInput(user) {
@@ -511,8 +522,8 @@ function beaconsAreLit (user) {
   eventBoxEl.appendChild(eventDesc1El)
   eventBoxEl.appendChild(eventButton1El)
   eventBoxEl.appendChild(eventButton2El)
-  eventButton1El.addEventListener('click', rohanHasAnswered)
-  eventButton2El.addEventListener('click', rohanWillNotAnswer)
+  eventButton1El.addEventListener('click', (user) => {rohanHasAnswered(user)})
+  eventButton2El.addEventListener('click', (user) => {rohanWillNotAnswer(user)});
 }
 
 function rohanHasAnswered(user) {
@@ -543,6 +554,15 @@ function rohanWillNotAnswer(user) {
   user.speed = user.speed + 5;
   eventBoxEl.appendChild(eventDesc2El)
   render(user)
+  nextTurn()
+}
+
+function pitTrap(user) {
+  eventTitleEl.textContent = 'Pit Trap!'
+  eventDesc1El.textContent = 'As you take your next step to continue down the race you feel the ground fall from underneath you. You land about 10 feet down and have to climb out of this hole. Lose 1 turn.'
+  user.skipTurn = 1
+  eventBoxEl.appendChild(eventTitleEl)
+  eventBoxEl.appendChild(eventDesc1El)
   nextTurn()
 }
 
@@ -696,4 +716,24 @@ function toolTipPlayer() {
     while (bodyEl.firstChild) {
       bodyEl.removeChild(bodyEl.firstChild);
     }
+  }
+
+  function skipComputerTurn() {
+    removeTitleBox()
+    removeEventBox()
+    const playerUIEl = document.createElement("h2");
+    playerTextEl.textContent = "The computer has lost its turn!";
+    titleBoxEl.appendChild(playerUIEl);
+    turnCounter = 1;
+    nextTurn()    
+  }
+
+  function skipPlayerTurn() {
+    removeTitleBox()
+    removeEventBox()
+    const playerUIEl = document.createElement("h2");
+    playerTextEl.textContent = "You have lost your turn!";
+    titleBoxEl.appendChild(playerUIEl);
+    turnCounter = 0;
+    nextTurn()
   }
