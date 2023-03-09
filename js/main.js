@@ -1,3 +1,4 @@
+console.log('JS TEST MAIN BRANCH');
 init();
 /*----- constants -----*/
 const player = {
